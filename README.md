@@ -17,4 +17,7 @@ git clone https://github.com/hamza-Algohary/LinuxImageViewer
 g++ main.cpp `pkg-config gtkmm-3.0 --libs --cflags` -lstdc++fs text_editor.cpp
 ```
 # Screenshots
+![](image-viewer-scr.png)
+![](img-view-zoom.png)
 ![](about-img-viewer.png)
+![](about-img.png)
