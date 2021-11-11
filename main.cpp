@@ -6,6 +6,7 @@
 #include <experimental/filesystem>
 
 #include "text_editor.h"
+#include "MapFile.h"
 
 //The power of two (Book)
 
@@ -277,12 +278,6 @@ public:
     }
 };
 
-struct{
-    bool auto_save = true;
-}settings;
-
-
-
 std::string get_arguments(int argc , char* argv[]){
     std::string text = "";
     if(argc < 2){
@@ -295,6 +290,17 @@ std::string get_arguments(int argc , char* argv[]){
 }
 
 int main(int argc , char* argv[]){
+    std::string settings_path = std::string(std::getenv("HOME"))+"/.image_viewer_settings.txt";
+    std::cout << settings_path << std::endl;
+    MapFile settings;
+
+    if(fs::exists(settings_path)){
+        settings.load_file(settings_path);
+    }else{
+        settings.value_of("autosave") = "true";
+        settings.value_of("system_theme") = "false";
+        settings.save_file(settings_path);
+    }
 
     fs::path file = get_arguments(argc , argv);
     if(argc < 2){
@@ -306,15 +312,29 @@ int main(int argc , char* argv[]){
         return 1;
     }
 
-
     auto app = Application::create();
     auto screen = Gdk::Screen::get_default();
+    auto context = Gtk::StyleContext::create();    
 
     Window window;  
     window.set_size_request(-1 , 300);
     window.set_default_size(600 , 400);
     window.set_icon_name("image-viewer");
 
+    auto style = CssProvider::create();
+    //auto context = StyleContext::create();
+
+    if(settings.value_of("system_theme") == "false"){
+        try{
+            style->load_from_path("theme/gtk.css");
+            context->add_provider_for_screen(screen , style , GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+            window.get_style_context()->add_provider_for_screen(screen , style , GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        }catch(Gtk::CssProviderError &e){
+            std::cout << "Theme Error: " << e.what() << std::endl;
+        }
+    }
+
+    //window.get_style_context()->remove_provider()
     HeaderBar titlebar;
     window.set_titlebar(titlebar);
     titlebar.set_title(file.filename().string());
@@ -437,14 +457,14 @@ int main(int argc , char* argv[]){
 
     rotate_right_button.signal_clicked().connect([&](){
         img.rotate_right();
-        if(settings.auto_save){
+        if(settings.value_of("autosave") == "true"){
             img.save();
         }
     });
 
     rotate_left_button.signal_clicked().connect([&](){
         img.rotate_left();
-        if(settings.auto_save){
+        if(settings.value_of("auto_save") == "true"){
             img.save();
         }
     });
@@ -540,17 +560,25 @@ int main(int argc , char* argv[]){
     preferences_box.property_margin() = 5;
     preferences_window.add(preferences_box);
     
-    HBox auto_save_box;
+    HBox auto_save_box , system_theme_box;
     preferences_box.pack_start(auto_save_box , PACK_SHRINK);
-    Label auto_save_label;
-    Switch auto_save_switch;
+    preferences_box.pack_start(system_theme_box , PACK_SHRINK);
+    Label auto_save_label("Auto Save") , theme_label("Use System Theme");
+    Switch auto_save_switch , system_theme_switch;
     auto_save_box.pack_start(auto_save_label , PACK_EXPAND_PADDING);
     auto_save_box.pack_start(auto_save_switch , PACK_EXPAND_PADDING);
+    system_theme_box.pack_start(theme_label , PACK_EXPAND_PADDING);
+    system_theme_box.pack_start(system_theme_switch , PACK_EXPAND_PADDING);
 
-    auto_save_switch.set_state(settings.auto_save);
-    auto_save_label.set_label("Auto Save");
+
+    auto_save_switch.set_state(string_to_bool(settings.value_of("autosave")));
     auto_save_switch.signal_state_changed().connect([&](StateType type){
-        settings.auto_save = auto_save_switch.get_state();
+        settings.value_of("autosave") = bool_to_string(auto_save_switch.get_state());
+    });
+
+    system_theme_switch.set_state(string_to_bool(settings.value_of("system_theme")));
+    system_theme_switch.signal_state_changed().connect([&](StateType type){
+        settings.value_of("system_theme") = bool_to_string(system_theme_switch.get_state());
     });
 
     preferences_window.set_transient_for(window);
@@ -558,6 +586,10 @@ int main(int argc , char* argv[]){
     preferences_item.signal_button_release_event().connect([&](GdkEventButton *e){
         preferences_window.show();
         return true;
+    });
+
+    preferences_window.signal_hide().connect([&](){
+        settings.save_file(settings_path);
     });
 
     preferences_window.show_all_children();
