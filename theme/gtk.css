@@ -1,0 +1,91 @@
+@import url("gtksrc.css");
+*{
+  all:unset;
+}
+
+window.background.nemo-window.nemo-desktop-window stack , frame separator{
+background-color:rgba(255 , 255 , 255 , 0.0);
+}
+
+
+window , window.background , toolbar , viewport , iconview , pading , scrolled , stack , window.csd , iconview.view , dialog , window > box.vertical , dialog.background , vte-terminal , headerbar , scrolledwindow , frame.view , frame , list , scrolledwindow.frame, box.primary-toolbar , .location-bar{
+background: rgb(255 , 255 , 255);
+}
+
+headerbar , window.maximized headerbar{
+box-shadow: none;
+}
+
+frame.view border , frame border , list , list.border{
+border:none;
+}
+
+/*Nautilus*/
+
+window.background.csd.nautilus-window scrolledwindow{
+background:url("image");
+}
+
+window.background.csd.nautilus-window headerbar.titlebar{
+  background-image: -gtk-scaled(url("assets/background-img-top-blue.png"), url("assets/background-img-top-blue@2.png"));
+  background-repeat: no-repeat;
+  background-position: bottom right;
+}
+
+/*frame separator{
+background-color:transparent;
+}*/
+
+frame.view row , frame row{
+background-color:rgb(255 , 255 , 255);
+}
+
+/* window.background.csd , */ stack ,  box.horizontal.linked ,  box  , viewport.frame /* , window  , .background */ {
+border-radius:0 0 8px 8px;
+}
+
+.dialog , window.dilaog /* , dialog.background*/{
+border-radius:8px 8px 8px 8px;
+}
+
+row.activatable label{
+color:black;
+background:transparent;
+}
+
+
+/*dialog{
+font-size:18px;
+}*/
+
+/*iconview.view{
+background: white;
+}
+
+window:backdrop:dir-ltr.background.csd{
+color: rgb(255 , 255 ,255);    
+}
+
+window.csd{
+background: rgb(255 , 255 ,255);
+}
+
+headerbar{
+box-shadow: none;
+}
+
+nemo-desktop-icon-view{
+background: rgba(255 , 255 ,255 , 0.0);
+}
+
+dialog{
+background:white;
+}
+ 
+dialog.background{
+background:white;
+}
+
+window > box.vertical{
+background:white;
+}*/
