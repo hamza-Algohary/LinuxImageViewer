@@ -4,7 +4,7 @@ A powerful and modern ImageViewer for linux based on Gtk and Cairo
 # Dependencies
 Before compiling make sure that the following packages are installed on your system:
 - g++
-- gtk-3.0-dev
+- libgtkmm-3.0-dev
 
 Note: Package names may differ according to your linux distro
 
@@ -19,4 +19,6 @@ g++ main.cpp `pkg-config gtkmm-3.0 --libs --cflags` -lstdc++fs text_editor.cpp
 ![](image-viewer-scr.png)
 ![](img-view-zoom.png)
 ![](about-img-viewer.png)
+![](settings.png)
 ![](about-img.png)
+
