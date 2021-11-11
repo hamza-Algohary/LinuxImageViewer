@@ -13,7 +13,7 @@ To build this app from source , run the following:
 ```
 git clone https://github.com/hamza-Algohary/LinuxImageViewer
 cd LinuxImageViewer
-g++ main.cpp `pkg-config gtkmm-3.0 --libs --cflags` -lstdc++fs text_editor.cpp
+g++ main.cpp `pkg-config gtkmm-3.0 --libs --cflags` -lstdc++fs text_editor.cpp MapFile.cpp
 ```
 # Screenshots
 ![](image-viewer-scr.png)
